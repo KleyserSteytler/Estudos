@@ -1,0 +1,110 @@
+﻿==================================================
+=== GUIA DEBIAN WI-FI HACKING - SOFTWARES ===
+==================================================
+## PHISHING WI-FI / ENGENHARIA SOCIAL
+==================================================
+## Instalar WiFiTe2
+
+cd /opt/
+git clone https://github.com/derv82/wifite2.git
+
+cd wifite2/
+python Wifite.py
+
+# ou instale para o sistema
+cd wifite2/
+python setup.py install
+
+==================================================
+DEPENDÊNCIAS PARA WIFITE (Obrigatório e Opcional)
+
+
+apt-get -y install net-tools tshark 
+
+## Instalar PYRIT
+cd /opt/
+wget -c https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/pyrit/pyrit-0.4.0.tar.gz && tar -xf pyrit-0.4.0.tar.gz
+
+cd pyrit-0.4.0/
+python setup.py build
+python setup.py install
+
+## Verificar Pyrit
+pyrit list_cores
+
+
+## Instalar Hashcat
+cd /opt
+git clone https://github.com/hashcat/hashcat
+cd hashcat
+make
+
+
+## Instalar Hcxtools
+cd /opt/
+git clone https://github.com/ZerBea/hcxtools
+cd hcxtools
+make
+make install
+
+
+## Instalar o Hcxdumptools
+cd /opt/
+git clone https://github.com/ZerBea/hcxdumptool
+cd hcxdumptool
+make
+make install
+
+## Dependências para Ataque com Captura do PMKID
+apt-get install libhwloc-dev ocl-icd-dev ocl-icd-opencl-dev pocl-opencl-icd
+
+=================================================
+## Instalar WiFiPhisher
+apt-get install -y python-setuptools
+
+cd /opt/
+git clone https://github.com/wifiphisher/wifiphisher.git
+cd wifiphisher/
+
+python setup.py install 
+wifiphiser
+
+
+==================================================
+## Instalar Fluxion 5.9
+
+## Versão mais recente - costuma apresentar erros...
+cd /opt/
+git clone https://github.com/FluxionNetwork/fluxion.git
+cd fluxion/
+
+# Execute a verificação e instalação de dependências:
+./fluxion.sh -i
+
+# Execute o Fluxion
+./fluxion.sh -m -r -k
+
+
+## DEPENDÊNCIA MDK4 DO FLUXION
+apt-get install pkg-config libnl-3-dev libnl-genl-3-dev libpcap-dev 
+
+cd /opt/
+git clone https://github.com/aircrack-ng/mdk4
+cd mdk4
+
+make
+make install
+
+==================================================
+## Instalar Fluxion 3.10 - Versão mais estável
+
+cd /opt/
+wget -c https://github.com/FluxionNetwork/fluxion/archive/v3.10.zip && unzip -q v3.10.zip && mv fluxion-3.10/ fluxion
+
+cd fluxion/
+
+# Execute a verificação e instalação de dependências:
+./fluxion.sh -i
+
+# Execute o Fluxion
+./fluxion.sh -m -r -k
